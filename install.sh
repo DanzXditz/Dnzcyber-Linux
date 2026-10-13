@@ -11,12 +11,7 @@ CYAN='\033[1;36m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-# ==============================================
-# GANTI "GANTI_USERNAME_INI" DENGAN USERNAME GITHUB LU
-# Contoh: kalau username lu "dnzcyber99", tulis "dnzcyber99"
-# ==============================================
 REPO_URL="https://github.com/DanzXditz/Dnzcyber-Linux.git"
-
 INSTALL_DIR="$HOME/.dnzcyber"
 
 clear
@@ -32,20 +27,16 @@ echo -e "${CYAN}   Dnzcyber Linux - Auto Installer${NC}"
 echo "----------------------------------------"
 echo ""
 
-# 1. Update & upgrade
 echo -e "${YELLOW}[1/7] Update & Upgrade sistem...${NC}"
 pkg update -y 2>/dev/null && pkg upgrade -y 2>/dev/null
 
-# 2. Install dependencies dasar
-echo -e "${YELLOW}[2/7] Install tools dasar (git, python, nano)...${NC}"
-pkg install -y git python nano 2>/dev/null
+echo -e "${YELLOW}[2/7] Install tools dasar (git, python, nano, coreutils)...${NC}"
+pkg install -y git python nano coreutils 2>/dev/null
 
-# 3. Beri akses storage
 echo -e "${YELLOW}[3/7] Minta akses penyimpanan...${NC}"
 termux-setup-storage 2>/dev/null
 sleep 2
 
-# 4. Download Dnzcyber
 echo -e "${YELLOW}[4/7] Download Dnzcyber dari GitHub...${NC}"
 if [ -d "$INSTALL_DIR" ]; then
     echo -e "${YELLOW}      Folder sudah ada, update ulang...${NC}"
@@ -59,26 +50,25 @@ else
     fi
 fi
 
-# 5. Set permissions
 echo -e "${YELLOW}[5/7] Set izin akses file...${NC}"
 chmod +x "$INSTALL_DIR/dnz.sh" 2>/dev/null
 chmod +x "$INSTALL_DIR/update.sh" 2>/dev/null
 chmod +x "$INSTALL_DIR/install.sh" 2>/dev/null
 
-# 6. Install Python tools
+# Copy Python game files ke folder hidden
+cp "$INSTALL_DIR/snake.py" "$HOME/.dnzcyber/" 2>/dev/null
+cp "$INSTALL_DIR/quiz.py" "$HOME/.dnzcyber/" 2>/dev/null
+
 echo -e "${YELLOW}[6/7] Install Python tools (sqlmap, wafw00f)...${NC}"
 pip install sqlmap wafw00f 2>/dev/null
 
-# 7. Setup alias di .bashrc
 echo -e "${YELLOW}[7/7] Setup shortcut command...${NC}"
 BASHRC="$HOME/.bashrc"
 
-# Hapus alias lama kalau ada
 sed -i '/# Dnzcyber alias/d' "$BASHRC" 2>/dev/null
 sed -i '/alias dnzcyber=/d' "$BASHRC" 2>/dev/null
 sed -i '/alias dnzcyber-update=/d' "$BASHRC" 2>/dev/null
 
-# Tambah alias baru
 echo "" >> "$BASHRC"
 echo "# Dnzcyber alias" >> "$BASHRC"
 echo "alias dnzcyber='cd $INSTALL_DIR && chmod +x dnz.sh && ./dnz.sh'" >> "$BASHRC"
